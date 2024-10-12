@@ -30,7 +30,7 @@ export default function SignInCard() {
   });
 
   const onSubmit = (data: SigninData) => {
-    login(data);
+    login({ json: data });
   };
 
   return (
