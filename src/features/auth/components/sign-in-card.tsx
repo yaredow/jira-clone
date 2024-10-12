@@ -17,8 +17,10 @@ import {
   FormItem,
 } from "@/components/ui/form";
 import Link from "next/link";
+import { useLogin } from "../api/use-login";
 
 export default function SignInCard() {
+  const { mutate: login } = useLogin();
   const form = useForm<SigninData>({
     resolver: zodResolver(SigninSchema),
     defaultValues: {
@@ -28,7 +30,7 @@ export default function SignInCard() {
   });
 
   const onSubmit = (data: SigninData) => {
-    console.log(data);
+    login(data);
   };
 
   return (
