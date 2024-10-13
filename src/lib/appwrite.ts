@@ -3,6 +3,15 @@ import "server-only";
 import { Client, Account, Users, Databases } from "node-appwrite";
 
 export async function createAdminClient() {
+  console.log(
+    "NEXT_PUBLIC_APPWRITE_ENDPOINT:",
+    process.env.NEXT_PUBLIC_APPWRITE_ENDPOINT,
+  );
+  console.log(
+    "NEXT_PUBLIC_APPWRITE_PROJECT:",
+    process.env.NEXT_PUBLIC_APPWRITE_PROJECT,
+  );
+  console.log("NEXT_APPWRITE_KEY:", process.env.NEXT_APPWRITE_KEY);
   const client = new Client()
     .setEndpoint(process.env.NEXT_PUBLIC_APPWRITE_ENDPOINT!)
     .setProject(process.env.NEXT_PUBLIC_APPWRITE_PROJECT!)
