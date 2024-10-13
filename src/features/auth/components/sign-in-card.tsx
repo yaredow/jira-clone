@@ -1,5 +1,3 @@
-"use client";
-
 import DottedSeparator from "@/components/dotted-separator";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -20,7 +18,7 @@ import Link from "next/link";
 import { useLogin } from "../api/use-login";
 
 export default function SignInCard() {
-  const { mutate: login } = useLogin();
+  const login = useLogin();
   const form = useForm<SigninData>({
     resolver: zodResolver(SigninSchema),
     defaultValues: {
@@ -78,7 +76,7 @@ export default function SignInCard() {
               )}
             />
 
-            <Button className="w-full" disabled={false}>
+            <Button type="submit" className="w-full" disabled={false}>
               Sign In
             </Button>
           </form>

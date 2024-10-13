@@ -23,8 +23,10 @@ import {
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { SignupData, SignupSchema } from "@/lib/validators";
+import { useRegister } from "../api/use-register";
 
 export default function SignupCard() {
+  const { mutate: register } = useRegister();
   const form = useForm<SignupData>({
     resolver: zodResolver(SignupSchema),
     defaultValues: {
@@ -35,7 +37,7 @@ export default function SignupCard() {
   });
 
   const onSubmit = (data: SignupData) => {
-    console.log(data);
+    register({ json: data });
   };
 
   return (
@@ -109,8 +111,8 @@ export default function SignupCard() {
                 </FormItem>
               )}
             />
-            <Button className=" w-full" disabled={false}>
-              Sign In
+            <Button type="submit" className=" w-full" disabled={false}>
+              Sign Up
             </Button>
           </form>
         </Form>
