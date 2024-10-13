@@ -8,9 +8,25 @@ import { AUTH_COOKIE } from "../constants";
 
 const app = new Hono()
   .post("/login", zValidator("json", SigninSchema), async (c) => {
-    const { email, password } = c.req.valid("json");
+    try {
+      const { email, password } = c.req.valid("json");
 
-    return c.json({ email, password });
+      const { account } = await createAdminClient();
+      const session = await account.createEmailPasswordSession(email, password);
+
+      setCookie(c, AUTH_COOKIE, session.secret, {
+        path: "/",
+        httpOnly: true,
+        secure: true,
+        sameSite: "strict",
+        maxAge: 60 * 60 * 24 * 30,
+      });
+
+      return c.json({ success: true });
+    } catch (error) {
+      console.error(error);
+      return c.json({ error }, 500);
+    }
   })
   .post("/register", zValidator("json", SignupSchema), async (c) => {
     try {
@@ -18,7 +34,7 @@ const app = new Hono()
 
       const { account } = await createAdminClient();
 
-      const user = await account.create(ID.unique(), email, password, name);
+      await account.create(ID.unique(), email, password, name);
 
       const session = await account.createEmailPasswordSession(email, password);
 
@@ -30,7 +46,7 @@ const app = new Hono()
         maxAge: 60 * 60 * 24 * 30,
       });
 
-      return c.json({ data: user });
+      return c.json({ success: true });
     } catch (error) {
       console.error(error);
       return c.json({ error }, 500);
