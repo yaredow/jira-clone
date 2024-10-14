@@ -1,3 +1,5 @@
+"use client";
+
 import DottedSeparator from "@/components/dotted-separator";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -18,7 +20,7 @@ import Link from "next/link";
 import { useLogin } from "../api/use-login";
 
 export default function SignInCard() {
-  const login = useLogin();
+  const { login, isPending } = useLogin();
   const form = useForm<SigninData>({
     resolver: zodResolver(SigninSchema),
     defaultValues: {
@@ -49,6 +51,7 @@ export default function SignInCard() {
                 <FormItem>
                   <FormControl>
                     <Input
+                      disabled={isPending}
                       type="email"
                       placeholder="Enter email address"
                       {...field}
@@ -66,6 +69,7 @@ export default function SignInCard() {
                 <FormItem>
                   <FormControl>
                     <Input
+                      disabled={isPending}
                       type="password"
                       placeholder="Enter your password"
                       {...field}
@@ -77,7 +81,7 @@ export default function SignInCard() {
             />
 
             <Button type="submit" className="w-full" disabled={false}>
-              Sign In
+              {isPending ? "Loading..." : "Login"}
             </Button>
           </form>
         </Form>

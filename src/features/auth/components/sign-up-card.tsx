@@ -26,7 +26,7 @@ import { SignupData, SignupSchema } from "@/lib/validators";
 import { useRegister } from "../api/use-register";
 
 export default function SignupCard() {
-  const { mutate: register } = useRegister();
+  const { isPending, register } = useRegister();
   const form = useForm<SignupData>({
     resolver: zodResolver(SignupSchema),
     defaultValues: {
@@ -68,6 +68,7 @@ export default function SignupCard() {
                 <FormItem>
                   <FormControl>
                     <Input
+                      disabled={isPending}
                       type="text"
                       placeholder="Enter your name"
                       {...field}
@@ -85,6 +86,7 @@ export default function SignupCard() {
                 <FormItem>
                   <FormControl>
                     <Input
+                      disabled={isPending}
                       type="email"
                       placeholder="Enter email address"
                       {...field}
@@ -102,6 +104,7 @@ export default function SignupCard() {
                 <FormItem>
                   <FormControl>
                     <Input
+                      disabled={isPending}
                       type="password"
                       placeholder="Enter your password"
                       {...field}

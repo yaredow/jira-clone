@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { client } from "@/lib/rpc";
 
 export const useCurrent = () => {
-  const query = useQuery({
+  const { data: user, isFetching } = useQuery({
     queryKey: ["auth/current"],
     queryFn: async () => {
       const response = await client.api.auth.current.$get();
@@ -15,5 +15,5 @@ export const useCurrent = () => {
       return await response.json();
     },
   });
-  return query;
+  return { user, isFetching };
 };
