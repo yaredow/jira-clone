@@ -9,7 +9,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Loader, LogOut } from "lucide-react";
+import { Loader2, LogOut } from "lucide-react";
 import DottedSeparator from "@/components/dotted-separator";
 import { useLogout } from "../api/use-logout";
 
@@ -20,7 +20,7 @@ export default function UserButton() {
   if (isFetching) {
     return (
       <div className="size-10 rounded-full flex items-center justify-center bg-neutral-200 border border-neutral-200 ">
-        <Loader className="animate-spin size-4 text-muted-foreground" />
+        <Loader2 className="animate-spin size-4 text-muted-foreground" />
       </div>
     );
   }

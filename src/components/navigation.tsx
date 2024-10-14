@@ -40,6 +40,7 @@ const routes = [
 
 export default function Navigation() {
   const pathName = usePathname();
+
   return (
     <ul className="flex flex-col">
       {routes.map((route, index) => {
