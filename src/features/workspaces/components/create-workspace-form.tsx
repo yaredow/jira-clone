@@ -15,6 +15,10 @@ import DottedSeparator from "@/components/dotted-separator";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useCreateWorkspaces } from "../api/use-create-workspaces";
+import { ChangeEvent, useRef } from "react";
+import Image from "next/image";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { ImageIcon } from "lucide-react";
 
 type CreateWorkspaceFormProps = {
   onCancel?: () => void;
@@ -24,6 +28,7 @@ export default function CreateWorkspaceForm({
   onCancel,
 }: CreateWorkspaceFormProps) {
   const { isPending, createWorkspace } = useCreateWorkspaces();
+  const inputRef = useRef<HTMLInputElement>(null);
   const form = useForm<CreateWorkspaceData>({
     resolver: zodResolver(CreateWorkspaceSchema),
     defaultValues: {
@@ -32,7 +37,25 @@ export default function CreateWorkspaceForm({
   });
 
   const onSubmit = (data: CreateWorkspaceData) => {
-    createWorkspace({ json: data });
+    const finalValue = {
+      ...data,
+      image: data.image instanceof File ? data.image : "",
+    };
+    createWorkspace(
+      { form: finalValue },
+      {
+        onSettled: () => {
+          form.reset();
+        },
+      },
+    );
+  };
+
+  const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      form.setValue("image", file);
+    }
   };
 
   return (
@@ -65,6 +88,62 @@ export default function CreateWorkspaceForm({
                 </FormItem>
               )}
             />
+
+            <FormField
+              control={form.control}
+              name="image"
+              render={({ field }) => (
+                <div className="flex flex-col space-y-2">
+                  <div className="flex items-center space-x-5">
+                    {field.value ? (
+                      <div className="size-[72px] relative rounded-md overflow-hidden">
+                        <Image
+                          src={
+                            field.value instanceof File
+                              ? URL.createObjectURL(field.value)
+                              : field.value
+                          }
+                          alt="Logo"
+                          className="object-cover"
+                          fill
+                        />
+                      </div>
+                    ) : (
+                      <Avatar className="size-[72px]">
+                        <AvatarFallback>
+                          <ImageIcon className="size-[36px] text-neutral-400" />
+                        </AvatarFallback>
+                      </Avatar>
+                    )}
+                    <div className="flex flex-col">
+                      <p className="text-sm">Workspace Icon</p>
+                      <p className="text-sm text-muted-foreground">
+                        JPG, PNG, SVG or JPEG up to 1MB
+                      </p>
+                      <input
+                        type="file"
+                        ref={inputRef}
+                        className="hidden"
+                        accept=".jpg, .png, .jpeg, .svg"
+                        disabled={isPending}
+                        onChange={handleImageChange}
+                      />
+                      <Button
+                        type="button"
+                        disabled={isPending}
+                        variant="teritery"
+                        size="xs"
+                        className="w-fit mt-2"
+                        onClick={() => inputRef.current?.click()}
+                      >
+                        Upload Image
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              )}
+            />
+
             <div className="py-7">
               <DottedSeparator />
             </div>
