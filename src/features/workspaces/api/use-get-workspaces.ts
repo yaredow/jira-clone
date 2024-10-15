@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { client } from "@/lib/rpc";
 
 export const useGetWorkspaces = () => {
-  const { data: user, isFetching } = useQuery({
+  const { data: workspaces, isFetching } = useQuery({
     queryKey: ["workspaces"],
     queryFn: async () => {
       const response = await client.api.workspaces.workspaces.$get();
@@ -15,5 +15,5 @@ export const useGetWorkspaces = () => {
       return await response.json();
     },
   });
-  return { user, isFetching };
+  return { workspaces, isFetching };
 };
