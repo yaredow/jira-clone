@@ -3,6 +3,7 @@ import { InferRequestType, InferResponseType } from "hono";
 
 import { client } from "@/lib/rpc";
 import { useRouter } from "next/navigation";
+import { toast } from "@/hooks/use-toast";
 
 type ResponseType = InferResponseType<(typeof client.api.auth.login)["$post"]>;
 type RequestType = InferRequestType<(typeof client.api.auth.login)["$post"]>;
@@ -22,9 +23,16 @@ export const useLogin = () => {
     onSuccess: () => {
       router.refresh();
       queryClient.invalidateQueries({ queryKey: ["auth/current"] });
+      toast({
+        description: "Logged in",
+      });
     },
     onError: (error) => {
       console.error(error);
+      toast({
+        description: "Login failed",
+        variant: "destructive",
+      });
     },
   });
   return { login, isPending };

@@ -7,7 +7,6 @@ import { Input } from "@/components/ui/input";
 import { FcGoogle } from "react-icons/fc";
 import { FaGithub } from "react-icons/fa";
 import { useForm } from "react-hook-form";
-import { SigninData, SigninSchema } from "@/lib/validators";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Form,
@@ -18,6 +17,7 @@ import {
 } from "@/components/ui/form";
 import Link from "next/link";
 import { useLogin } from "../api/use-login";
+import { SigninData, SigninSchema } from "../schemas";
 
 export default function SignInCard() {
   const { login, isPending } = useLogin();

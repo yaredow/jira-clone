@@ -3,6 +3,7 @@ import { InferRequestType, InferResponseType } from "hono";
 
 import { client } from "@/lib/rpc";
 import { useRouter } from "next/navigation";
+import { toast } from "@/hooks/use-toast";
 
 type ResponseType = InferResponseType<
   (typeof client.api.auth.register)["$post"]
@@ -24,6 +25,15 @@ export const useRegister = () => {
     onSuccess: () => {
       router.refresh();
       queryClient.invalidateQueries({ queryKey: ["auth/current"] });
+      toast({
+        description: "Account created successfully",
+      });
+    },
+    onError: () => {
+      toast({
+        description: "Error creating account",
+        variant: "destructive",
+      });
     },
   });
   return { register, isPending };

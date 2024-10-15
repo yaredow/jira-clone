@@ -22,8 +22,8 @@ import {
 } from "@/components/ui/form";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { SignupData, SignupSchema } from "@/lib/validators";
 import { useRegister } from "../api/use-register";
+import { SignupData, SignupSchema } from "../schemas";
 
 export default function SignupCard() {
   const { isPending, register } = useRegister();
