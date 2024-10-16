@@ -14,7 +14,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import DottedSeparator from "@/components/dotted-separator";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { useCreateWorkspaces } from "../api/use-create-workspaces";
 import { ChangeEvent, useRef } from "react";
 import Image from "next/image";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -29,7 +28,7 @@ type CreateWorkspaceFormProps = {
   initialValues: Workspace;
 };
 
-export default function EditWorkspaceForm({
+export default function UpdateWorkspaceForm({
   onCancel,
   initialValues,
 }: CreateWorkspaceFormProps) {

@@ -15,7 +15,7 @@ import {
 const routes = [
   {
     label: "Home",
-    href: "/",
+    href: "",
     icon: GoHome,
     activeIcon: GoHomeFill,
   },
@@ -42,6 +42,7 @@ const routes = [
 export default function Navigation() {
   const pathName = usePathname();
   const workspaceId = useWorkspaceId();
+  console.log({ pathName });
 
   return (
     <ul className="flex flex-col">
