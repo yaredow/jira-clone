@@ -1,4 +1,5 @@
 import { getCurrent } from "@/features/auth/actions";
+import CreateWorkspaceForm from "@/features/workspaces/components/create-workspace-form";
 import { redirect } from "next/navigation";
 
 export default async function Page() {
@@ -6,5 +7,9 @@ export default async function Page() {
 
   if (!user) redirect("/sign-in");
 
-  return <main>Workspace</main>;
+  return (
+    <main className="w-full lg:max-w-xl">
+      <CreateWorkspaceForm />
+    </main>
+  );
 }

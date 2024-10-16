@@ -2,7 +2,7 @@
 
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { CreateWorkspaceData, CreateWorkspaceSchema } from "../schemas";
+import { UpdateWorkspaceData, UpdateWorkspaceSchema } from "../schemas";
 import {
   Form,
   FormControl,
@@ -21,32 +21,40 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { ImageIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
+import { Workspace } from "../types";
+import { useUpdateWorkspace } from "../api/use-update-workspace";
 
 type CreateWorkspaceFormProps = {
   onCancel?: () => void;
+  initialValues: Workspace;
 };
 
-export default function CreateWorkspaceForm({
+export default function EditWorkspaceForm({
   onCancel,
+  initialValues,
 }: CreateWorkspaceFormProps) {
-  const { isPending, createWorkspace } = useCreateWorkspaces();
+  const { isPending, updateWorksapce } = useUpdateWorkspace();
   const inputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
 
-  const form = useForm<CreateWorkspaceData>({
-    resolver: zodResolver(CreateWorkspaceSchema),
+  const form = useForm<UpdateWorkspaceData>({
+    resolver: zodResolver(UpdateWorkspaceSchema),
     defaultValues: {
-      name: "",
+      ...initialValues,
+      image: initialValues.imageUrl || undefined,
     },
   });
 
-  const onSubmit = (data: CreateWorkspaceData) => {
+  const onSubmit = (data: UpdateWorkspaceData) => {
     const finalValue = {
       ...data,
       image: data.image instanceof File ? data.image : "",
     };
-    createWorkspace(
-      { form: finalValue },
+    updateWorksapce(
+      {
+        form: finalValue,
+        param: { workspaceId: initialValues.$id },
+      },
       {
         onSuccess: ({ data }) => {
           form.reset();
