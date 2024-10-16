@@ -10,16 +10,25 @@ import {
   SelectValue,
 } from "./ui/select";
 import WorkspaceAvatar from "@/features/workspaces/components/workspace-avatar";
+import { useRouter } from "next/navigation";
+import { useWorkspaceId } from "@/features/workspaces/hooks/use-workspace-id";
 
 export default function WorkspaceSwitcher() {
+  const router = useRouter();
   const { isFetching, workspaces } = useGetWorkspaces();
+  const workspaceId = useWorkspaceId();
+
+  const onSelect = (workspaceId: string) => {
+    router.push(`/workspaces/${workspaceId}`);
+  };
+
   return (
     <div className="flex flex-col gap-y-2">
       <div className="flex items-center justify-between">
         <p className="text-xs uppercase text-neutral-500">Workspaces</p>
         <RiAddCircleFill className="size-5 text-neutral-500 cursor-pointer hover:opacity-75 transition" />
       </div>
-      <Select>
+      <Select onValueChange={onSelect} value={workspaceId}>
         <SelectTrigger className="w-full bg-neutral-200 font-medium p-1">
           <SelectValue placeholder="No workspace selected" />
         </SelectTrigger>
