@@ -31,6 +31,7 @@ export default function WorkspaceSwitcher() {
                   name={workspace.name}
                   image={workspace.imageUrl}
                 />
+                <p className="text-sm">{workspace.name}</p>
               </div>
             </SelectItem>
           ))}

@@ -16,6 +16,7 @@ export const useLogout = () => {
     onSuccess: () => {
       router.refresh();
       queryClient.invalidateQueries({ queryKey: ["auth/current"] });
+      queryClient.invalidateQueries({ queryKey: ["workspaces"] });
     },
     onError: (error) => {
       console.error(error);
