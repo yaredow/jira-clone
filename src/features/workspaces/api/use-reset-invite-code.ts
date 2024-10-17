@@ -14,7 +14,7 @@ type RequestType = InferRequestType<
 
 export const useResetInviteCode = () => {
   const queryClient = useQueryClient();
-  const { mutate: deleteWorkspace, isPending } = useMutation<
+  const { mutate: resetInviteCode, isPending } = useMutation<
     ResponseType,
     Error,
     RequestType
@@ -47,5 +47,5 @@ export const useResetInviteCode = () => {
       });
     },
   });
-  return { deleteWorkspace, isPending };
+  return { resetInviteCode, isPending };
 };
