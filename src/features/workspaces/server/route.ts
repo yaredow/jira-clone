@@ -10,8 +10,8 @@ import {
 } from "@/config";
 import { ID, Query } from "node-appwrite";
 import { MemberRole } from "@/features/members/types";
-import { generatInviteCode } from "@/lib/utils";
 import { getMember } from "@/features/members/utils";
+import { generateInviteCode } from "@/lib/utils";
 
 const app = new Hono()
   .get("workspaces", sessionMiddleware, async (c) => {
@@ -70,7 +70,7 @@ const app = new Hono()
           name,
           userId: user.$id,
           imageUrl: uploadedImageUrl,
-          inviteCode: generatInviteCode(6),
+          inviteCode: generateInviteCode(6),
         },
       );
 
@@ -134,6 +134,53 @@ const app = new Hono()
 
       return c.json({ data: workspace });
     },
-  );
+  )
+  .delete("/:workspaceId", sessionMiddleware, async (c) => {
+    const databases = c.get("databases");
+    const { workspaceId } = c.req.param();
+    const user = c.get("user");
+
+    const member = await getMember({
+      databases,
+      workspaceId,
+      userId: user.$id,
+    });
+
+    if (!member || member.role !== MemberRole.ADMIN) {
+      return c.json({ error: "Unautherized" }, 401);
+    }
+
+    // TODO: Delete members, projects, and tasks
+
+    await databases.deleteDocument(DATABASE_ID, WORKSPACE_ID, workspaceId);
+
+    return c.json({ data: { $id: workspaceId } });
+  })
+  .post("/:workspaceId/reset-invite-code", sessionMiddleware, async (c) => {
+    const databases = c.get("databases");
+    const { workspaceId } = c.req.param();
+    const user = c.get("user");
+
+    const member = await getMember({
+      databases,
+      workspaceId,
+      userId: user.$id,
+    });
+
+    if (!member || member.role !== MemberRole.ADMIN) {
+      return c.json({ error: "Unautherized" }, 401);
+    }
+
+    const workspace = await databases.updateDocument(
+      DATABASE_ID,
+      WORKSPACE_ID,
+      workspaceId,
+      {
+        inviteCode: generateInviteCode(6),
+      },
+    );
+
+    return c.json({ data: workspace });
+  });
 
 export default app;
