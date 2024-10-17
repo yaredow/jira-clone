@@ -17,7 +17,7 @@ import { Button } from "@/components/ui/button";
 import { ChangeEvent, useRef } from "react";
 import Image from "next/image";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { ImageIcon } from "lucide-react";
+import { ArrowLeftIcon, ImageIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { Workspace } from "../types";
@@ -72,7 +72,20 @@ export default function UpdateWorkspaceForm({
 
   return (
     <Card className="w-full h-full border-none shadow-none">
-      <CardHeader className="flex  p-7">
+      <CardHeader className="flex flex-row items-center space-x-4 space-y-0  p-7">
+        <Button
+          className="flex gap-2 items-center justify-center"
+          size="sm"
+          variant="secondary"
+          onClick={
+            onCancel
+              ? onCancel
+              : () => router.push(`/workspaces/${initialValues.$id}`)
+          }
+        >
+          <ArrowLeftIcon className="size-4" />
+          Back
+        </Button>
         <CardTitle className="text-xl font-bold">
           Create a new workspace
         </CardTitle>
@@ -140,16 +153,35 @@ export default function UpdateWorkspaceForm({
                           disabled={isPending}
                           onChange={handleImageChange}
                         />
-                        <Button
-                          type="button"
-                          disabled={isPending}
-                          variant="teritery"
-                          size="xs"
-                          className="w-fit mt-2"
-                          onClick={() => inputRef.current?.click()}
-                        >
-                          Upload Image
-                        </Button>
+                        {field.value ? (
+                          <Button
+                            type="button"
+                            disabled={isPending}
+                            variant="destructive"
+                            size="xs"
+                            className="w-fit mt-2"
+                            onClick={() => {
+                              field.onChange(null);
+                              inputRef.current?.click();
+                              if (inputRef.current) {
+                                inputRef.current.value = "";
+                              }
+                            }}
+                          >
+                            Upload Image
+                          </Button>
+                        ) : (
+                          <Button
+                            type="button"
+                            disabled={isPending}
+                            variant="teritery"
+                            size="xs"
+                            className="w-fit mt-2"
+                            onClick={() => inputRef.current?.click()}
+                          >
+                            Upload Image
+                          </Button>
+                        )}
                       </div>
                     </div>
                   </div>
@@ -170,7 +202,7 @@ export default function UpdateWorkspaceForm({
                   Cancel
                 </Button>
                 <Button type="submit" disabled={isPending}>
-                  Create workspace
+                  Save changes
                 </Button>
               </div>
             </div>

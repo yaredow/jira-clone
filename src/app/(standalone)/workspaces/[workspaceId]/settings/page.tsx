@@ -17,7 +17,7 @@ export default async function Page({
   if (!initialValues) redirect(`/workspaces/${params.workspaceId}`);
 
   return (
-    <div>
+    <div className="w-full lg:max-w-xl">
       <UpdateWorkspaceForm initialValues={initialValues} />
     </div>
   );

@@ -26,9 +26,9 @@ export async function getWorkspace({ workspaceId }: getWorkspaceProps) {
     const user = await account.get();
 
     const member = await getMember({
-      workspaceId,
-      userId: user.$id,
       databases,
+      userId: user.$id,
+      workspaceId,
     });
 
     if (!member) return null;
