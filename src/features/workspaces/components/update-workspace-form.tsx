@@ -168,7 +168,7 @@ export default function UpdateWorkspaceForm({
                               }
                             }}
                           >
-                            Upload Image
+                            Remove Image
                           </Button>
                         ) : (
                           <Button
