@@ -45,7 +45,7 @@ const app = new Hono()
         }),
       );
 
-      c.json({
+      return c.json({
         data: {
           ...member,
           documents: populatedMembers,

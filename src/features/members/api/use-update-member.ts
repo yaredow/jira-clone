@@ -5,27 +5,28 @@ import { client } from "@/lib/rpc";
 import { toast } from "@/hooks/use-toast";
 
 type ResponseType = InferResponseType<
-  (typeof client.api.members)[":memberId"]["$delete"],
+  (typeof client.api.members)[":memberId"]["$patch"],
   200
 >;
 type RequestType = InferRequestType<
-  (typeof client.api.members)[":memberId"]["$delete"]
+  (typeof client.api.members)[":memberId"]["$patch"]
 >;
 
-export const useDeleteMember = () => {
+export const useUpdateMember = () => {
   const queryClient = useQueryClient();
-  const { mutate: deleteMember, isPending } = useMutation<
+  const { mutate: updateMember, isPending } = useMutation<
     ResponseType,
     Error,
     RequestType
   >({
-    mutationFn: async ({ param }) => {
-      const response = await client.api.members[":memberId"].$delete({
+    mutationFn: async ({ param, json }) => {
+      const response = await client.api.members[":memberId"].$patch({
         param,
+        json,
       });
 
       if (!response.ok) {
-        throw new Error("Failed to delete member");
+        throw new Error("Failed to update member");
       }
 
       return await response.json();
@@ -33,16 +34,16 @@ export const useDeleteMember = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["members"] });
       toast({
-        description: "Member deleted successfully",
+        description: "Member updated successfully",
       });
     },
     onError: (error) => {
       console.error(error);
       toast({
-        description: "Error deleting member",
+        description: "Error update member",
         variant: "destructive",
       });
     },
   });
-  return { deleteMember, isPending };
+  return { updateMember, isPending };
 };
