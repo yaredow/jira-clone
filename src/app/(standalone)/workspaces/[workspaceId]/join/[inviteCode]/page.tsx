@@ -6,6 +6,7 @@ import { redirect } from "next/navigation";
 type WorkspaceIdJoinPageProps = {
   params: {
     workspaceId: string;
+    inviteCode: string;
   };
 };
 
@@ -24,7 +25,11 @@ export default async function WorkspaceIdJoinPage({
 
   return (
     <div className="w-full lg:max-w-xl">
-      <JoinWorkspaceForm initialValues={initialValues} />
+      <JoinWorkspaceForm
+        initialValues={initialValues}
+        code={params.inviteCode}
+        workspaceId={params.workspaceId}
+      />
     </div>
   );
 }

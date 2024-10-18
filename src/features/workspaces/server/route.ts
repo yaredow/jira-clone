@@ -13,7 +13,6 @@ import { MemberRole } from "@/features/members/types";
 import { getMember } from "@/features/members/utils";
 import { generateInviteCode } from "@/lib/utils";
 import { z } from "zod";
-import { error } from "console";
 import { Workspace } from "../types";
 
 const app = new Hono()
@@ -195,6 +194,7 @@ const app = new Hono()
 
       const user = c.get("user");
       const databases = c.get("databases");
+
       const member = await getMember({
         databases,
         workspaceId,
