@@ -33,10 +33,9 @@ export default function CreateProjectForm({
   const { isPending, createProject } = useCreateProject();
   const workspaceId = useWorkspaceId();
   const inputRef = useRef<HTMLInputElement>(null);
-  const router = useRouter();
 
   const form = useForm<CreateProjectData>({
-    resolver: zodResolver(CreateProjectSchema),
+    resolver: zodResolver(CreateProjectSchema.omit({ workspaceId: true })),
     defaultValues: {
       name: "",
     },
@@ -88,7 +87,7 @@ export default function CreateProjectForm({
                     <FormControl>
                       <Input
                         type="text"
-                        placeholder="Enter name of the workspace"
+                        placeholder="Enter the name of the project"
                         {...field}
                       />
                     </FormControl>

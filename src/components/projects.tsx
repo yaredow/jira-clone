@@ -1,6 +1,7 @@
 "use client";
 
 import { useGetProjects } from "@/features/projects/api/use-get-projects";
+import { useCreateProjectModal } from "@/features/projects/hooks/use-create-project-modal";
 import { useWorkspaceId } from "@/features/workspaces/hooks/use-workspace-id";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
@@ -9,6 +10,7 @@ import { RiAddCircleFill } from "react-icons/ri";
 
 export default function Projects() {
   const workspaceId = useWorkspaceId();
+  const { open } = useCreateProjectModal();
   const projectId = null;
   const pathName = usePathname();
   const { projects } = useGetProjects({ workspaceId });
@@ -17,7 +19,7 @@ export default function Projects() {
       <div className="flex items-center justify-between">
         <p className="text-xs uppercase text-neutral-500">Projects</p>
         <RiAddCircleFill
-          onClick={() => {}}
+          onClick={() => open()}
           className="size-5 text-neutral-500 cursor-pointer hover:opacity-75 transition"
         />
       </div>

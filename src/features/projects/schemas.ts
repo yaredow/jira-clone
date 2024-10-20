@@ -1,9 +1,7 @@
 import { z } from "zod";
 
 export const CreateProjectSchema = z.object({
-  name: z
-    .string()
-    .min(1, "Workspace name should be not less than one character"),
+  name: z.string(),
   image: z
     .union([
       z.instanceof(File),

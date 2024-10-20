@@ -30,7 +30,7 @@ export const useCreateProject = () => {
     },
     onSuccess: () => {
       router.refresh();
-      queryClient.invalidateQueries({ queryKey: ["project"] });
+      queryClient.invalidateQueries({ queryKey: ["projects"] });
       toast({
         description: "Project created successfully",
       });
