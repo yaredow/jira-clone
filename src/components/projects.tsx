@@ -1,6 +1,7 @@
 "use client";
 
 import { useGetProjects } from "@/features/projects/api/use-get-projects";
+import ProjectAvatar from "@/features/projects/components/workspace-avatar";
 import { useCreateProjectModal } from "@/features/projects/hooks/use-create-project-modal";
 import { useWorkspaceId } from "@/features/workspaces/hooks/use-workspace-id";
 import { cn } from "@/lib/utils";
@@ -35,6 +36,11 @@ export default function Projects() {
                 isActive && "bg-white shadow-sm hover:opacity-100 text-primary",
               )}
             >
+              <ProjectAvatar
+                name={project.name}
+                image={project.image}
+                fallbackClassName=""
+              />
               <span className="truncate">{project.name}</span>
             </div>
           </Link>

@@ -25,11 +25,7 @@ export default async function WorkspaceIdJoinPage({
 
   return (
     <div className="w-full lg:max-w-xl">
-      <JoinWorkspaceForm
-        initialValues={initialValues}
-        code={params.inviteCode}
-        workspaceId={params.workspaceId}
-      />
+      <JoinWorkspaceForm initialValues={initialValues} />
     </div>
   );
 }
