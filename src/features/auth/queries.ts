@@ -1,3 +1,5 @@
+import "server-only";
+
 import { createSessionClient } from "@/lib/appwrite";
 
 export async function getCurrent() {
