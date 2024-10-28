@@ -16,14 +16,14 @@ import { Button } from "@/components/ui/button";
 import { ChangeEvent, useRef } from "react";
 import Image from "next/image";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { ArrowLeftIcon, CopyIcon, ImageIcon } from "lucide-react";
+import { ArrowLeftIcon, ImageIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { useConfirm } from "@/hooks/use-confirm";
-import { useToast } from "@/hooks/use-toast";
 import { useUpdateProject } from "../api/use-update-project";
 import { Project } from "../types";
 import { UpdateProjectData, UpdateProjectSchema } from "../schemas";
+import { useDeleteProject } from "../api/use-delete-project";
 
 type CreateWorkspaceFormProps = {
   onCancel?: () => void;
@@ -34,9 +34,12 @@ export default function UpdateWorkspaceForm({
   onCancel,
   initialValues,
 }: CreateWorkspaceFormProps) {
-  const { isPending, updateProject } = useUpdateProject();
+  const { isPending: isProjectUpdatePending, updateProject } =
+    useUpdateProject();
+  const { isPending: isProjectDeletePending, deleteProject } =
+    useDeleteProject();
+
   const inputRef = useRef<HTMLInputElement>(null);
-  const { toast } = useToast();
   const router = useRouter();
 
   const [ConfirmationDialog, confirm] = useConfirm({
@@ -78,14 +81,14 @@ export default function UpdateWorkspaceForm({
     );
   };
 
-  /* const handleConfirm = async () => {
+  const handleConfirm = async () => {
     const ok = await confirm();
 
     if (ok) {
-      deleteWorkspace(
+      deleteProject(
         {
           param: {
-            workspaceId: initialValues.$id,
+            projectId: initialValues.$id,
           },
         },
         {
@@ -95,7 +98,7 @@ export default function UpdateWorkspaceForm({
         },
       );
     }
-  }; */
+  };
 
   const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -188,13 +191,13 @@ export default function UpdateWorkspaceForm({
                             ref={inputRef}
                             className="hidden"
                             accept=".jpg, .png, .jpeg, .svg"
-                            disabled={isPending}
+                            disabled={isProjectUpdatePending}
                             onChange={handleImageChange}
                           />
                           {field.value ? (
                             <Button
                               type="button"
-                              disabled={isPending}
+                              disabled={isProjectUpdatePending}
                               variant="destructive"
                               size="xs"
                               className="w-fit mt-2"
@@ -207,7 +210,7 @@ export default function UpdateWorkspaceForm({
                           ) : (
                             <Button
                               type="button"
-                              disabled={isPending}
+                              disabled={isProjectUpdatePending}
                               variant="teritery"
                               size="xs"
                               className="w-fit mt-2"
@@ -235,7 +238,7 @@ export default function UpdateWorkspaceForm({
                   >
                     Cancel
                   </Button>
-                  <Button type="submit" disabled={isPending}>
+                  <Button type="submit" disabled={isProjectUpdatePending}>
                     Save changes
                   </Button>
                 </div>
@@ -258,7 +261,8 @@ export default function UpdateWorkspaceForm({
               variant="destructive"
               size="sm"
               className="mt-6 w-fit ml-auto"
-              disabled={isPending}
+              disabled={isProjectUpdatePending || isProjectDeletePending}
+              onClick={handleConfirm}
             >
               Delete workspace
             </Button>

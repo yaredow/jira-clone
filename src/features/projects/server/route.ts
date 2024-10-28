@@ -156,6 +156,37 @@ const app = new Hono()
 
       return c.json({ data: project });
     },
-  );
+  )
+  .delete("/:projectId", sessionMiddleware, async (c) => {
+    const databases = c.get("databases");
+    const { projectId } = c.req.param();
+    const user = c.get("user");
+
+    const existingProject = await databases.getDocument(
+      DATABASE_ID,
+      PROJECTS_ID,
+      projectId,
+    );
+
+    if (!existingProject) {
+      return c.json({ error: "Project not found" }, 404);
+    }
+
+    const member = await getMember({
+      databases,
+      workspaceId: existingProject.workspaceId,
+      userId: user.$id,
+    });
+
+    if (!member || member.role !== MemberRole.ADMIN) {
+      return c.json({ error: "Unautherized" }, 401);
+    }
+
+    // TODO: Delete members, projects, and tasks
+
+    await databases.deleteDocument(DATABASE_ID, PROJECTS_ID, projectId);
+
+    return c.json({ data: { $id: existingProject.$id } });
+  });
 
 export default app;
