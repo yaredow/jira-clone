@@ -2,7 +2,6 @@
 
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { UpdateWorkspaceData, UpdateWorkspaceSchema } from "../schemas";
 import {
   Form,
   FormControl,
@@ -20,30 +19,25 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { ArrowLeftIcon, CopyIcon, ImageIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
-import { Workspace } from "../types";
-import { useUpdateWorkspace } from "../api/use-update-workspace";
 import { useConfirm } from "@/hooks/use-confirm";
-import { useDeleteWorkspace } from "../api/use-delete-workspace";
 import { useToast } from "@/hooks/use-toast";
-import { useResetInviteCode } from "../api/use-reset-invite-code";
+import { useUpdateProject } from "../api/use-update-project";
+import { Project } from "../types";
+import { UpdateProjectData, UpdateProjectSchema } from "../schemas";
 
 type CreateWorkspaceFormProps = {
   onCancel?: () => void;
-  initialValues: Workspace;
+  initialValues: Project;
 };
 
 export default function UpdateWorkspaceForm({
   onCancel,
   initialValues,
 }: CreateWorkspaceFormProps) {
-  const { isPending, updateWorksapce } = useUpdateWorkspace();
+  const { isPending, updateProject } = useUpdateProject();
   const inputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
   const router = useRouter();
-  const { deleteWorkspace, isPending: isDeleteWorkspacePending } =
-    useDeleteWorkspace();
-  const { resetInviteCode, isPending: isResetInviteCodePending } =
-    useResetInviteCode();
 
   const [ConfirmationDialog, confirm] = useConfirm({
     title: "Delete workspace",
@@ -57,23 +51,23 @@ export default function UpdateWorkspaceForm({
     variant: "destructive",
   });
 
-  const form = useForm<UpdateWorkspaceData>({
-    resolver: zodResolver(UpdateWorkspaceSchema),
+  const form = useForm<UpdateProjectData>({
+    resolver: zodResolver(UpdateProjectSchema),
     defaultValues: {
       ...initialValues,
       image: initialValues.imageUrl || undefined,
     },
   });
 
-  const onSubmit = (data: UpdateWorkspaceData) => {
+  const onSubmit = (data: UpdateProjectData) => {
     const finalValue = {
       ...data,
       image: data.image instanceof File ? data.image : "",
     };
-    updateWorksapce(
+    updateProject(
       {
         form: finalValue,
-        param: { workspaceId: initialValues.$id },
+        param: { projectId: initialValues.$id },
       },
       {
         onSuccess: ({ data }) => {
@@ -84,7 +78,7 @@ export default function UpdateWorkspaceForm({
     );
   };
 
-  const handleConfirm = async () => {
+  /* const handleConfirm = async () => {
     const ok = await confirm();
 
     if (ok) {
@@ -101,35 +95,13 @@ export default function UpdateWorkspaceForm({
         },
       );
     }
-  };
-
-  const handleRestInviteCode = async () => {
-    const ok = await confirmReset();
-
-    if (ok) {
-      resetInviteCode({
-        param: {
-          workspaceId: initialValues.$id,
-        },
-      });
-    }
-  };
+  }; */
 
   const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
       form.setValue("image", file);
     }
-  };
-
-  const fullInviteLink = `${window.location.origin}/workspaces/${initialValues.$id}/join/${initialValues.inviteCode}`;
-
-  const handleCopyInviteLink = () => {
-    navigator.clipboard.writeText(fullInviteLink).then(() => {
-      toast({
-        description: "Invite link copied to your clipboard",
-      });
-    });
   };
 
   return (
@@ -145,15 +117,16 @@ export default function UpdateWorkspaceForm({
             onClick={
               onCancel
                 ? onCancel
-                : () => router.push(`/workspaces/${initialValues.$id}`)
+                : () =>
+                    router.push(
+                      `/workspaces/${initialValues.workspaceId}/projects/${initialValues.$id}`,
+                    )
             }
           >
             <ArrowLeftIcon className="size-4" />
             Back
           </Button>
-          <CardTitle className="text-xl font-bold">
-            Create a new workspace
-          </CardTitle>
+          <CardTitle className="text-xl font-bold">Update a project</CardTitle>
         </CardHeader>
         <div className="px-7">
           <DottedSeparator />
@@ -206,7 +179,7 @@ export default function UpdateWorkspaceForm({
                           </Avatar>
                         )}
                         <div className="flex flex-col">
-                          <p className="text-sm">Workspace Icon</p>
+                          <p className="text-sm">Project Icon</p>
                           <p className="text-sm text-muted-foreground">
                             JPG, PNG, SVG or JPEG up to 1MB
                           </p>
@@ -275,38 +248,6 @@ export default function UpdateWorkspaceForm({
       <Card className="w-full h-full border-none shadow-none">
         <CardContent className="p-7">
           <div className="flex flex-col">
-            <h3 className=" font-bold">Invite Members</h3>
-            <p className="text-sm text-muted-foreground">
-              Use the invite like to add members to your workspace
-            </p>
-            <div className="mt-4">
-              <div className="flex items-center justify-center gap-x-2">
-                <Input disabled value={fullInviteLink} />
-                <Button
-                  className="size-12"
-                  variant="secondary"
-                  onClick={handleCopyInviteLink}
-                >
-                  <CopyIcon className="size-5" />
-                </Button>
-              </div>
-            </div>
-            <DottedSeparator className="py-7" />
-            <Button
-              size="sm"
-              className="mt-6 w-fit ml-auto"
-              disabled={isPending || isResetInviteCodePending}
-              onClick={handleRestInviteCode}
-            >
-              Reset invite code
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
-
-      <Card className="w-full h-full border-none shadow-none">
-        <CardContent className="p-7">
-          <div className="flex flex-col">
             <h3 className="text-destructive font-bold">Danger Zone</h3>
             <p className="text-sm text-muted-foreground">
               Deleting a workspace is an irreversable proccess and will remove
@@ -317,8 +258,7 @@ export default function UpdateWorkspaceForm({
               variant="destructive"
               size="sm"
               className="mt-6 w-fit ml-auto"
-              disabled={isPending || isDeleteWorkspacePending}
-              onClick={handleConfirm}
+              disabled={isPending}
             >
               Delete workspace
             </Button>
