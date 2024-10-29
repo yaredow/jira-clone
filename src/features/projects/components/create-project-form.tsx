@@ -33,6 +33,7 @@ export default function CreateProjectForm({
   const { isPending, createProject } = useCreateProject();
   const workspaceId = useWorkspaceId();
   const inputRef = useRef<HTMLInputElement>(null);
+  const router = useRouter();
 
   const form = useForm<CreateProjectData>({
     resolver: zodResolver(CreateProjectSchema.omit({ workspaceId: true })),
@@ -52,7 +53,7 @@ export default function CreateProjectForm({
       {
         onSuccess: ({ data }) => {
           form.reset();
-          //TODO: redirect to project page
+          router.push(`/workspaces/${workspaceId}/projects/${data.id}`);
         },
       },
     );

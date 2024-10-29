@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { getCurrent } from "@/features/auth/queries";
 import ProjectAvatar from "@/features/projects/components/workspace-avatar";
 import { getProject } from "@/features/projects/queries";
+import TaskViewSwitcher from "@/features/tasks/components/task-view-switcher";
 import { PencilIcon } from "lucide-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
@@ -25,7 +26,7 @@ export default async function ProjectIdPage({ params }: ProjectIdPageProps) {
   });
 
   if (!initialValues) {
-    throw new Error("Project not found");
+    return <div>Project not found</div>;
   }
 
   return (
@@ -50,6 +51,7 @@ export default async function ProjectIdPage({ params }: ProjectIdPageProps) {
           </Button>
         </div>
       </div>
+      <TaskViewSwitcher />
     </div>
   );
 }
