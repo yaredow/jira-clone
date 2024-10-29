@@ -7,7 +7,7 @@ type UseGetProjectsProps = {
 };
 
 export const useGetProjects = ({ workspaceId }: UseGetProjectsProps) => {
-  const { data: projects, isFetching } = useQuery({
+  const { data: projects, isLoading } = useQuery({
     queryKey: ["projects"],
     queryFn: async () => {
       const response = await client.api.projects.$get({
@@ -18,8 +18,9 @@ export const useGetProjects = ({ workspaceId }: UseGetProjectsProps) => {
         return null;
       }
 
-      return await response.json();
+      const data = await response.json();
+      return data.data;
     },
   });
-  return { projects, isFetching };
+  return { projects, isLoading };
 };

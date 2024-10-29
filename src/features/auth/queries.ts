@@ -1,5 +1,3 @@
-import "server-only";
-
 import { createSessionClient } from "@/lib/appwrite";
 
 export const getCurrent = async () => {

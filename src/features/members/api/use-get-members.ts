@@ -7,7 +7,7 @@ type useGetMembersProps = {
 };
 
 export const useGetMembers = ({ workspaceId }: useGetMembersProps) => {
-  const { data: members, isFetching } = useQuery({
+  const { data: members, isLoading } = useQuery({
     queryKey: ["members", workspaceId],
     queryFn: async () => {
       const response = await client.api.members.$get({
@@ -18,8 +18,9 @@ export const useGetMembers = ({ workspaceId }: useGetMembersProps) => {
         return null;
       }
 
-      return await response.json();
+      const data = await response.json();
+      return data.data;
     },
   });
-  return { members, isFetching };
+  return { members, isLoading };
 };
