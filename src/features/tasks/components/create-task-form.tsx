@@ -57,6 +57,7 @@ export default function CreateTaskForm({
       {
         onSuccess: () => {
           form.reset();
+          onCancel?.();
         },
       },
     );
@@ -103,7 +104,7 @@ export default function CreateTaskForm({
                   <FormItem>
                     <FormLabel>Due Date</FormLabel>
                     <FormControl>
-                      <DatePicker {...field} />
+                      <DatePicker {...field} placeholder="Select due date" />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
