@@ -72,7 +72,11 @@ export default function CreateTaskForm({
       </div>
       <CardContent className="p-7">
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)}>
+          <form
+            onSubmit={form.handleSubmit(onSubmit, (error) =>
+              console.log(error),
+            )}
+          >
             <div className="flex flex-col gap-y-4">
               <FormField
                 control={form.control}
@@ -143,7 +147,7 @@ export default function CreateTaskForm({
 
               <FormField
                 control={form.control}
-                name="assigneeId"
+                name="status"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Status</FormLabel>
