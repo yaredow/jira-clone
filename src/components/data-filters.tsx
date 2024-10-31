@@ -134,6 +134,14 @@ export default function DataFilers({ hideProjectFilter }: DataFilersProps) {
           ))}
         </SelectContent>
       </Select>
+
+      <DatePicker
+        className="h-8 w-full lg:w-auto"
+        value={dueDate ? new Date(dueDate) : undefined}
+        onChange={(date) => {
+          setFilters({ dueDate: date ? date.toISOString() : null });
+        }}
+      />
     </div>
   );
 }
