@@ -10,6 +10,8 @@ import { useGetTasks } from "../api/use-get-tasks";
 import { useQueryState } from "nuqs";
 import DataFilers from "@/components/data-filters";
 import { useTaskFilter } from "../hooks/use-task-filter";
+import { DataTable } from "./data-table";
+import { columns } from "./columns";
 
 export default function TaskViewSwitcher() {
   const workspaceId = useWorkspaceId();
@@ -67,7 +69,12 @@ export default function TaskViewSwitcher() {
           </div>
         ) : (
           <>
-            <TabsContent value="table">{JSON.stringify(tasks)}</TabsContent>
+            <TabsContent value="table">
+              <DataTable
+                columns={columns}
+                data={tasks?.documents ? tasks.documents : []}
+              />
+            </TabsContent>
             <TabsContent value="kanban">{JSON.stringify(tasks)}</TabsContent>
             <TabsContent value="calendar">{JSON.stringify(tasks)}</TabsContent>
           </>
