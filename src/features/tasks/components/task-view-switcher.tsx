@@ -30,18 +30,16 @@ export default function TaskViewSwitcher() {
     search,
   });
 
-  console.log({ tasks });
-
   const { open } = useCreateTaskModal();
 
   return (
     <Tabs
       defaultValue={view}
       onValueChange={setView}
-      className="flex-1 w-full border rounded-lg"
+      className="w-full flex-1 rounded-lg border"
     >
-      <div className="h-full flex flex-col overflow-auto p-4">
-        <div className="flex flex-col gap-y-4 lg:flex-row justify-between items-center">
+      <div className="flex h-full flex-col overflow-auto p-4">
+        <div className="flex flex-col items-center justify-between gap-y-4 lg:flex-row">
           <TabsList className="w-full lg:w-auto">
             <TabsTrigger value="table" className="h-8 w-full lg:w-auto">
               Table
@@ -56,7 +54,7 @@ export default function TaskViewSwitcher() {
             </TabsTrigger>
           </TabsList>
           <Button onClick={open} className="w-full lg:w-auto">
-            <PlusIcon className="size-4 mr-2" />
+            <PlusIcon className="mr-2 size-4" />
             New
           </Button>
         </div>
@@ -64,7 +62,7 @@ export default function TaskViewSwitcher() {
         <DataFilers />
         <DottedSeparator className="my-4" />
         {isTaskLoading ? (
-          <div className="w-full border rounded-lg h-[200px] flex flex-col items-center justify-center">
+          <div className="flex h-[200px] w-full flex-col items-center justify-center rounded-lg border">
             <Loader2 className="size-5 animate-spin text-muted-foreground" />
           </div>
         ) : (

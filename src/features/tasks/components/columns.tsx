@@ -7,6 +7,9 @@ import { Task } from "../types";
 import { Button } from "@/components/ui/button";
 import ProjectAvatar from "@/features/projects/components/workspace-avatar";
 import MemberAvatar from "@/features/members/components/member-avatar";
+import TaskDate from "./task-date";
+import { Badge } from "@/components/ui/badge";
+import { snakeCaseToTitleCase } from "@/lib/utils";
 
 export const columns: ColumnDef<Task>[] = [
   {
@@ -98,6 +101,28 @@ export const columns: ColumnDef<Task>[] = [
     },
     cell: ({ row }) => {
       const dueDate = row.original.dueDate;
+      console.log({ dueDate });
+
+      return <TaskDate value={dueDate} />;
+    },
+  },
+  {
+    accessorKey: "status",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Status
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
+    cell: ({ row }) => {
+      const status = row.original.status;
+
+      return <Badge variant={status}>{snakeCaseToTitleCase(status)}</Badge>;
     },
   },
 ];
